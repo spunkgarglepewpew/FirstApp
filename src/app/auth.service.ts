@@ -1,39 +1,56 @@
 import { Injectable } from '@angular/core';
+import axios from 'axios';  
 
 interface LoginRequest {
-  email: string;
+  username: string;
   password: string;
 }
 
 interface SignupRequest {
+  username: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  mobile: string;
+  address: string;
+  gender: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  
-  async login(request: LoginRequest): Promise<any> {
+
+  private apiUrl = 'http://localhost:8080/api/auth';  
+
+  constructor() { }
+
+  async login(credentials: LoginRequest): Promise<any> {
     try {
-      const response = { data: { message: 'Login successful', user: { email: request.email } } };
-      console.log('Login successful', response.data);
+      const response = await axios.post(`${this.apiUrl}/signin`, credentials, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Login Successful:', response.data);
       return response.data;
     } catch (error) {
-      console.error('Login failed', error);
+      console.error('Login Error:', error);
+      throw error;
     }
   }
 
-  
-  async signup(request: SignupRequest): Promise<any> {
+  async signup(user: SignupRequest): Promise<any> {
     try {
-      const response = { data: { message: 'Signup successful', user: { email: request.email } } };
-      console.log('Signup successful', response.data);
+      const response = await axios.post(`${this.apiUrl}/signup`, user, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Signup Successful:', response.data);
       return response.data;
     } catch (error) {
-      console.error('Signup failed', error);
+      console.error('Signup Error:', error);
+      throw error;
     }
   }
 }

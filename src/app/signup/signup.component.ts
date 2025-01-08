@@ -10,15 +10,30 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
+  username: string = '';
   email: string = '';
   password: string = '';
-  confirmPassword: string = '';
+  mobile: string = '';
+  address: string = '';
+  gender: string = '';
 
   constructor(private authService: AuthService) {}
 
   async onSubmit() {
-    const signupData = { email: this.email, password: this.password, confirmPassword: this.confirmPassword };
+    const signupData = {
+      username: this.username,
+      email: this.email,
+      password: this.password,
+      mobile: this.mobile,
+      address: this.address,
+      gender: this.gender
+    };
     console.log('Signup Data:', signupData);
-    await this.authService.signup(signupData);
+    try {
+      const response = await this.authService.signup(signupData);
+      console.log('Signup successful', response);
+    } catch (error) {
+      console.error('Signup failed', error);
+    }
   }
 }

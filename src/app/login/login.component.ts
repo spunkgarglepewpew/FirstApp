@@ -10,14 +10,21 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email: string = '';
+  username: string = '';
   password: string = '';
 
   constructor(private authService: AuthService) {}
 
   async onSubmit() {
-    const loginData = { email: this.email, password: this.password };
+    const loginData = { username: this.username, password: this.password };
     console.log('Login Data:', loginData);
-    await this.authService.login(loginData);
+    try {
+      const response = await this.authService.login(loginData);
+      console.log('Login successful', response);
+      
+    } catch (error) {
+      console.error('Login failed', error);
+      
+    }
   }
 }
