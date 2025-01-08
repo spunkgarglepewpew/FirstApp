@@ -33,7 +33,7 @@ export class AuthService {
       });
       console.log('Login Successful:', response.data);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login Error:', error);
       throw error;
     }
@@ -48,7 +48,7 @@ export class AuthService {
       });
       console.log('Signup Successful:', response.data);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Signup Error:', error);
       throw error;
     }

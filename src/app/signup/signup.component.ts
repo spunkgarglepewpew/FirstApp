@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
@@ -16,10 +17,18 @@ export class SignupComponent {
   mobile: string = '';
   address: string = '';
   gender: string = '';
+  errorMessage: string = '';
+  successMessage: string = '';
 
   constructor(private authService: AuthService) {}
 
-  async onSubmit() {
+  async onSubmit(form: NgForm) {
+    if (form.invalid) {
+      this.errorMessage = 'Please fill out the form correctly.';
+      this.successMessage = '';
+      return;
+    }
+
     const signupData = {
       username: this.username,
       email: this.email,
@@ -32,8 +41,13 @@ export class SignupComponent {
     try {
       const response = await this.authService.signup(signupData);
       console.log('Signup successful', response);
-    } catch (error) {
+      this.successMessage = 'Signup successful';
+      this.errorMessage = '';
+      form.resetForm();
+    } catch (error: any) {
       console.error('Signup failed', error);
+      this.errorMessage = 'Signup failed: ' + (error.response?.data?.message || error.message || 'Unknown error');
+      this.successMessage = '';
     }
   }
 }
